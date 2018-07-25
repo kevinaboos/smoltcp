@@ -143,8 +143,8 @@ impl<'a, 'b> UdpSocket<'a, 'b> {
 
         let packet_buf = self.tx_buffer.enqueue_one_with(|buf| buf.resize(size))?;
         packet_buf.endpoint = endpoint;
-        net_trace!("[{}]{}:{}: buffer to send {} octets",
-                   self.debug_id, self.endpoint, packet_buf.endpoint, size);
+        // net_trace!("[{}]{}:{}: buffer to send {} octets",
+        //            self.debug_id, self.endpoint, packet_buf.endpoint, size);
         Ok(&mut packet_buf.as_mut()[..size])
     }
 
@@ -162,9 +162,9 @@ impl<'a, 'b> UdpSocket<'a, 'b> {
     /// This function returns `Err(Error::Exhausted)` if the receive buffer is empty.
     pub fn recv(&mut self) -> Result<(&[u8], IpEndpoint)> {
         let packet_buf = self.rx_buffer.dequeue_one()?;
-        net_trace!("[{}]{}:{}: receive {} buffered octets",
-                   self.debug_id, self.endpoint,
-                   packet_buf.endpoint, packet_buf.size);
+        // net_trace!("[{}]{}:{}: receive {} buffered octets",
+        //            self.debug_id, self.endpoint,
+        //            packet_buf.endpoint, packet_buf.size);
         Ok((&packet_buf.as_ref(), packet_buf.endpoint))
     }
 
@@ -193,9 +193,9 @@ impl<'a, 'b> UdpSocket<'a, 'b> {
         let packet_buf = self.rx_buffer.enqueue_one_with(|buf| buf.resize(repr.payload.len()))?;
         packet_buf.as_mut().copy_from_slice(repr.payload);
         packet_buf.endpoint = IpEndpoint { addr: ip_repr.src_addr(), port: repr.src_port };
-        net_trace!("[{}]{}:{}: receiving {} octets",
-                   self.debug_id, self.endpoint,
-                   packet_buf.endpoint, packet_buf.size);
+        // net_trace!("[{}]{}:{}: receiving {} octets",
+        //            self.debug_id, self.endpoint,
+        //            packet_buf.endpoint, packet_buf.size);
         Ok(())
     }
 
@@ -204,9 +204,9 @@ impl<'a, 'b> UdpSocket<'a, 'b> {
         let debug_id = self.debug_id;
         let endpoint = self.endpoint;
         self.tx_buffer.dequeue_one_with(|packet_buf| {
-            net_trace!("[{}]{}:{}: sending {} octets",
-                       debug_id, endpoint,
-                       packet_buf.endpoint, packet_buf.size);
+            // net_trace!("[{}]{}:{}: sending {} octets",
+            //            debug_id, endpoint,
+            //            packet_buf.endpoint, packet_buf.size);
 
             let repr = UdpRepr {
                 src_port: endpoint.port,
